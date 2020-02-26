@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        
+        <style>
+            table tr td {
+				text-align: center;
+				padding: 5px;
+				border: 1px solid #909090;
+				cursor: pointer;
+				transition: all .2s ease;
+			}
+
+			table tr th:hover {
+                transition: all .2s ease;
+				background-color: #bee2ff;
+				box-shadow: 5px 5px 8px 0px #c1c1c1;
+                cursor: pointer;
+			}
+        </style>
+	</head>
+	<body>
+		<table class="grid">
+			<thead>
+				<tr>
+					<th data-type="number">Возраст</th>
+					<th data-type="string">Имя</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>5</td>
+					<td>A</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>D</td>
+				</tr>
+				<tr>
+					<td>12</td>
+					<td>B</td>
+				</tr>
+				<tr>
+					<td>9</td>
+					<td>E</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>C</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<script>
+            class Grid{
+				constructor(domObject){
+					this._el = domObject;
+                    this._el.addEventListener('click', this.onClick.bind(this));
+                    this._tbody = this._el.querySelector('tbody');
+				}
+
+				string(_sortIndex){
+                    return (a, b) => a.cells[_sortIndex].innerHTML > b.cells[_sortIndex].innerHTML ? 1 : -1;
+				}
+
+				number(_sortIndex){
+                    return (a, b) => +a.cells[_sortIndex].innerHTML - +b.cells[_sortIndex].innerHTML;
+                }
+                
+				onClick(event){
+                    let type = event.target.dataset['type'];
+                    if(event.target.tagName == 'TH' && type){
+                        let rowsArray = Array.from(this._tbody.rows);
+
+                        rowsArray.sort(this[type](event.target.cellIndex));
+
+                        this._tbody.append(...rowsArray);
+                    }
+				}
+			}
+
+			new Grid(document.querySelector('.grid'));
+		</script>
+	</body>
+</html>
