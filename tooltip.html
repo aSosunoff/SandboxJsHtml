@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			body {
+				height: 2000px;
+				/* добавим body прокрутку, подсказка должна работать и с прокруткой */
+			}
+
+			.tooltip {
+				/* немного стилизуем подсказку, можете использовать свои стили вместо этих */
+				position: fixed;
+				padding: 10px 20px;
+				border: 1px solid #b3c9ce;
+				border-radius: 4px;
+				text-align: center;
+				font: italic 14px/1.3 sans-serif;
+				color: #333;
+				background: #fff;
+				box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+			}
+		</style>
+	</head>
+
+	<body>
+		<p>ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя</p>
+		<p>ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя ЛяЛяЛя</p>
+
+		<button data-tooltip="эта подсказка должна быть длиннее, чем элемент">
+			Короткая кнопка
+		</button>
+		<button data-tooltip="HTML<br>подсказка">Ещё кнопка</button>
+
+		<p>
+			Прокрутите страницу, чтобы кнопки оказались у верхнего края, а затем
+			проверьте правильно ли выводятся подсказки.
+		</p>
+
+		<script>
+			class Dimension {
+				constructor(domObject) {
+					let {
+						clientWidth,
+						clientHeight,
+						clientTop,
+						clientLeft,
+						offsetTop,
+						offsetLeft
+					} = domObject;
+
+					this.width = clientWidth;
+					this.height = clientHeight;
+					this.top = clientTop;
+					this.offTop = offsetTop;
+					this.left = clientLeft;
+					this.offLeft = offsetLeft;
+				}
+			}
+
+			class Tooltip {
+				constructor(domObject) {
+					this._el = domObject;
+					this._el.addEventListener("mouseover", this.onMouseover.bind(this));
+                    this._el.addEventListener("mouseout", this.onMouseout.bind(this));
+                    
+                    this._tooltip = null;
+				}
+
+				/* setPosition(divTooltip, dimensionTarget, dimensionTooltip) {
+                    let left = dimensionTarget.offLeft - (dimensionTooltip.width - dimensionTarget.width) / 2;
+                    if(left < 0) {
+                        left = 5;
+                    } else if((left + dimensionTooltip.width) > window.innerWidth){
+                        left = window.innerWidth - dimensionTooltip.width - 20
+                    }
+
+                    let top = dimensionTarget.offTop - dimensionTooltip.height - 5;
+                    if(top < 0){
+                        top = 0;
+                    } else if((top + dimensionTooltip.top) > window.innerHeight) {
+                        top = window.innerHeight - dimensionTooltip.height - 5
+                    };
+                    
+                    divTooltip.style.top = `${top}px`;
+                    divTooltip.style.left = `${left}px`;
+                } */
+                
+                createElement(tooltip){
+                    let divTooltip = document.createElement("div");
+                    divTooltip.className = "tooltip";
+                    divTooltip.innerHTML = tooltip;
+                    document.body.appendChild(divTooltip);
+                    return divTooltip;
+                }
+
+				onMouseover(event) {
+					let isTooltip = "tooltip" in event.target.dataset;
+
+					if (!isTooltip) 
+                        return;
+
+                    let target = event.target;
+                    this._tooltip = this.createElement(target.dataset.tooltip);
+                    
+                    let coords = target.getBoundingClientRect();
+
+                    let left = coords.left + (target.offsetWidth - this._tooltip.offsetWidth) / 2;
+                    if (left < 0) left = 0;
+
+                    let top = coords.top - this._tooltip.offsetHeight - 5;
+                    if (top < 0) {
+                        top = coords.top + target.offsetHeight + 5;
+                    }
+
+                    this._tooltip.style.top = `${top}px`;
+                    this._tooltip.style.left = `${left}px`;
+				}
+
+				onMouseout(event) {
+					let tooltip = event.target.dataset.tooltip;
+
+					if (tooltip) {
+                        this._tooltip.remove();
+					}
+				}
+			}
+
+			new Tooltip(document);
+		</script>
+	</body>
+</html>
