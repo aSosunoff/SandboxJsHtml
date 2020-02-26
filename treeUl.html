@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+
+		<style>
+			ul li span {
+				padding: 3px;
+				display: inline-block;
+				margin-bottom: 3px;
+                cursor: pointer;
+                transition: all .2s ease;
+			}
+
+            ul li span:hover {
+				background-color: #d0e2ff;
+			}
+
+            ul li span ~ ul {
+				display: none;
+			}
+
+            ul li span ~ ul.open {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<ul class="tree">
+			<li>
+				<span>Животные</span>
+				<ul>
+					<li>
+						<span>Млекопитающие</span>
+						<ul>
+							<li>Коровы</li>
+							<li>Ослы</li>
+							<li>Собаки</li>
+							<li>Тигры</li>
+						</ul>
+					</li>
+					<li>
+						<span>Другие</span>
+						<ul>
+							<li>Змеи</li>
+							<li>Птицы</li>
+							<li>Ящерицы</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<span>Рыбы</span>
+				<ul>
+					<li>
+						<span>Аквариумные</span>
+						<ul>
+							<li>Гуппи</li>
+							<li>Скалярии</li>
+						</ul>
+					</li>
+					<li>
+						<span>Морские</span>
+						<ul>
+							<li>Морская форель</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+
+		<script>
+            class Tree{
+                constructor(domObject){
+                    this._el = domObject;
+                    this._el.addEventListener('click', this.onClick);
+                }
+
+                onClick(event){
+                    if(event.target.tagName == 'SPAN'){
+                        let ul = event.target.nextElementSibling;
+                        ul.classList.toggle('open');
+                    }
+                }
+            }
+
+            new Tree(document.querySelector('.tree'));
+        </script>
+	</body>
+</html>
