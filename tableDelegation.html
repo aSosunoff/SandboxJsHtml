@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+
+		<style>
+			table tr td {
+				text-align: center;
+				padding: 5px;
+				border: 1px solid #909090;
+				cursor: pointer;
+				transition: all .2s ease;
+			}
+
+			table tr td.selected {
+				background-color: #bee2ff;
+				box-shadow: 5px 5px 8px 0px #c1c1c1;
+			}
+		</style>
+	</head>
+	<body>
+		<table class="table-click">
+			<tr>
+				<td>
+					<strong>Северо-Запад</strong> <br />Металл <br />Серебро
+					<br />Старейшины
+				</td>
+				<td>
+					<strong>Север</strong> <br />Вода <br />Синий <br />Перемены
+				</td>
+				<td>
+					<strong>Северо-Восток</strong> <br />Земля <br />Жёлтый
+					<br />Направление
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Запад</strong> <br />Металл <br />Золото <br />Молодость
+				</td>
+				<td>
+					<strong>Центр</strong> <br />Всё <br />Пурпурный <br />Гармония
+				</td>
+				<td>
+					<strong>Восток</strong> <br />Дерево <br />Синий <br />Будущее
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Юго-Запад</strong> <br />Земля <br />Коричневый
+					<br />Спокойствие
+				</td>
+				<td>
+					<strong>Юг</strong> <br />Огонь <br />Оранжевый <br />Слава
+				</td>
+				<td>
+					<strong>Юго-Восток</strong> <br />Дерево <br />Зелёный <br />Роман
+				</td>
+			</tr>
+		</table>
+
+		<script>
+			class Table{
+				constructor(domElement, option){
+					this._table = domElement;
+					this._table.addEventListener('click', this.onClick.bind(this));
+					this.selectedArray = [];
+
+					this.option = Object.assign({
+						removeAllSelectBeforeCurrentSelect: false
+					}, option);
+				}
+
+				onClick(event){
+					let td = event.target.closest('TD');
+
+					if(!td) return;
+
+					if(this.option.removeAllSelectBeforeCurrentSelect)
+						this.unSelectAll(td);
+
+					td.classList.toggle('selected');
+
+					if(td.classList.contains('selected')){
+						this.selectedArray.push(td);	
+					} else {
+						this.selectedArray.splice(this.selectedArray.indexOf(td), 1);
+					}
+				}
+
+				unSelectAll(td){
+					for (let _td of this.selectedArray) {
+						if(td && _td == td)
+							continue;
+							
+						_td.classList.toggle('selected');
+					}
+					this.selectedArray = [];
+				}
+			}
+
+			let table = new Table(document.querySelector('.table-click'), {
+				removeAllSelectBeforeCurrentSelect: true
+			});
+		</script>
+	</body>
+</html>
