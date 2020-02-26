@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			// показывает элемент с текстом "Hello" рядом с правой верхней частью окна.
+			showNotification({
+				top: 10, // 10px от верхней границы окна (по умолчанию 0px)
+				right: 10, // 10px от правого края окна (по умолчанию 0px)
+				html: "Hello!", // HTML-уведомление
+				className: "welcome" // дополнительный класс для div (необязательно)
+			});
+
+			function showNotification(option){
+				let div = document.createElement('div');
+				div.className = "notification";
+
+				option = Object.assign({}, {
+					html: 'test',
+					top: 10,
+					right: 10,
+					position: 'absolute'
+				}, option)
+
+				div.innerHTML = option.html;
+				
+				if(option['className'])
+					div.classList.add(option.className);
+
+				div.style.top = `${option.top}px`;
+				div.style.right = `${option.right}px`;
+				div.style.position = option.position;
+
+				document.body.insertAdjacentElement('beforeend', div);
+
+				setTimeout(() => {
+					div.remove();
+				}, 1500);
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			#field {
+				width: 200px;
+				height: 150px;
+				border: 10px solid black;
+				position: relative;
+				background-color: #00ff00;
+				overflow: hidden;
+				cursor: pointer;
+			}
+
+			#ball {
+				position: absolute;
+                left: 0;
+                top: 0;
+			}
+		</style>
+	</head>
+
+	<body style="height:2000px">
+		Нажмите на поле для перемещения мяча.
+		<br />
+		Мяч не должен выходить за границы поля.
+
+		<div id="field">
+			<img src="https://ru.js.cx/clipart/ball.svg" id="ball" /> . . . . . . . .
+			. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+			. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+			. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+			. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+			. . . . . . . . . . . . . . . . . . . . .
+		</div>
+
+		<script>
+			document.querySelector("#field").addEventListener("click", function(e) {
+                let cursor = new Cursor(e);
+                let dimansionField = new Dimension(e.currentTarget);
+                let ball = new Ball(document.querySelector("#ball"));
+
+                ball.position(cursor.x, cursor.y, dimansionField);
+			});
+            
+            class Cursor{
+                constructor(event){
+                    let {
+                        clientY,
+                        clientX,
+                    } = event;
+
+                    let {
+                        top,
+                        left,
+                    } = event.currentTarget.getBoundingClientRect();
+
+                    let {
+                        clientLeft,
+                        clientTop
+                    } = event.currentTarget;
+
+                    this.x = clientX - left - clientLeft;
+                    this.y = clientY - top - clientTop;
+                }
+            }
+
+            class Dimension{
+                constructor(domObject){
+                    let {
+                        clientWidth,
+                        clientHeight,
+                        clientTop,
+                        clientLeft
+                    } = domObject;
+
+                    this.width = clientWidth;
+                    this.height = clientHeight;
+                    this.top = clientTop;
+                    this.left = clientLeft;
+                }
+            }
+
+            class Ball extends Dimension{
+                constructor(domObject){
+                    super(domObject);
+
+                    this.ball = domObject;
+                    this.ball.style.transition = 'all 0.5s cubic-bezier(0.6, 0.6, 0.85, 0.04) 0s';
+                }
+
+                position(x, y, dimension){
+                    const getCurrentPosition = (axis, field, fieldStyle, fn) => {
+                        let currentPosition = fn(axis);
+
+                        if(currentPosition < 0)
+                            currentPosition = 0;
+                        
+                        if(currentPosition + this[field] >  dimension[field])
+                            currentPosition = dimension[field] - this[field];
+
+                        return currentPosition;
+                    }
+
+                    let currentPositionX = getCurrentPosition(x, 'width', 'left', this.centerByHeight.bind(this));
+                    let currentPositionY = getCurrentPosition(y, 'height', 'top', this.centerByWidth.bind(this));
+                    
+                    this.ball.style.left = `${currentPositionX}px`;
+                    this.ball.style.top = `${currentPositionY}px`;
+                }
+
+                centerByWidth(y){
+                    return y - this.height / 2;
+                }
+
+                centerByHeight(x){
+                    return x - this.width / 2;
+                }
+            }
+		</script>
+	</body>
+</html>
