@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="messages.css" />
+        <meta charset="utf-8" />
+        
+        <style>
+            .list{
+                margin: auto;
+                width: 70vw;
+            }
+
+            .pane{
+                border-top-color: blue;
+                border-top-style: solid;
+                border-top-width: 5px;
+                background-color: #d0e6ff;
+                padding: 10px;
+                position: relative;
+                transition: 1s all ease;
+            }
+
+            .pane *{
+                margin: 0px;
+            }
+
+            .pane h3{
+                margin-bottom: 5px;
+            }
+
+            .pane .remove-button{
+                position: absolute;
+                right: 0;
+                background-color: transparent;
+                border: none;
+                font-weight: bold;
+                color: red;
+                cursor: pointer;
+            }
+        </style>
+	</head>
+
+	<body>
+		<div class="list">
+			<div class="pane">
+				<h3>Лошадь</h3>
+				<p>
+					Домашняя лошадь — животное семейства непарнокопытных, одомашненный и
+					единственный сохранившийся подвид дикой лошади, вымершей в дикой
+					природе, за исключением небольшой популяции лошади Пржевальского.
+				</p>
+			</div>
+			<div class="pane">
+				<h3>Осёл</h3>
+				<p>
+					Домашний осёл (лат. Equus asinus asinus), или ишак, — одомашненный
+					подвид дикого осла (Equus asinus), сыгравший важную историческую роль
+					в развитии хозяйства и культуры человека и по-прежнему широко в
+					хозяйстве многих развивающихся стран.
+				</p>
+			</div>
+			<div class="pane">
+				<h3>Кошка</h3>
+				<p>
+					Кошка, или домашняя кошка (лат. Felis silvestris catus), — домашнее
+					животное, одно из наиболее популярных(наряду с собакой)
+					«животных-компаньонов». Являясь одиночным охотником на грызунов и
+					других мелких животных, кошка — социальное животное, использующее для
+					общения широкий диапазон звуковых сигналов.
+				</p>
+			</div>
+        </div>
+        
+        <script>
+            let panes = document.querySelectorAll('.pane');
+
+            for (let pane of panes) {
+                pane.insertAdjacentHTML('afterbegin', '<button class="remove-button">[x]</button>')
+
+                pane.addEventListener('transitionend', function(e){
+                    pane.remove();
+                },{
+                    once: true
+                });
+
+                button = pane.querySelector('.remove-button');
+
+                button.addEventListener('click', function (e) {
+                    pane.style.opacity = 0;
+                },{
+                    once: true
+                });
+            }            
+        </script>
+	</body>
+</html>
