@@ -15,8 +15,8 @@
 
 			#ball {
 				position: absolute;
-                left: 0;
-                top: 0;
+				left: 0;
+				top: 0;
 			}
 		</style>
 	</head>
@@ -37,87 +37,83 @@
 
 		<script>
 			document.querySelector("#field").addEventListener("click", function(e) {
-                let cursor = new Cursor(e);
-                let dimansionField = new Dimension(e.currentTarget);
-                let ball = new Ball(document.querySelector("#ball"));
+				let cursor = new Cursor(e);
+				let dimansionField = new Dimension(e.currentTarget);
+				let ball = new Ball(document.querySelector("#ball"));
 
-                ball.position(cursor.x, cursor.y, dimansionField);
+				ball.position(cursor.x, cursor.y, dimansionField);
 			});
-            
-            class Cursor{
-                constructor(event){
-                    let {
-                        clientY,
-                        clientX,
-                    } = event;
 
-                    let {
-                        top,
-                        left,
-                    } = event.currentTarget.getBoundingClientRect();
+			class Cursor {
+				constructor(event) {
+					let { clientY, clientX } = event;
 
-                    let {
-                        clientLeft,
-                        clientTop
-                    } = event.currentTarget;
+					let { top, left } = event.currentTarget.getBoundingClientRect();
 
-                    this.x = clientX - left - clientLeft;
-                    this.y = clientY - top - clientTop;
-                }
-            }
+					let { clientLeft, clientTop } = event.currentTarget;
 
-            class Dimension{
-                constructor(domObject){
-                    let {
-                        clientWidth,
-                        clientHeight,
-                        clientTop,
-                        clientLeft
-                    } = domObject;
+					this.x = clientX - left - clientLeft;
+					this.y = clientY - top - clientTop;
+				}
+			}
 
-                    this.width = clientWidth;
-                    this.height = clientHeight;
-                    this.top = clientTop;
-                    this.left = clientLeft;
-                }
-            }
+			class Dimension {
+				constructor(domObject) {
+					let { clientWidth, clientHeight, clientTop, clientLeft } = domObject;
 
-            class Ball extends Dimension{
-                constructor(domObject){
-                    super(domObject);
+					this.width = clientWidth;
+					this.height = clientHeight;
+					this.top = clientTop;
+					this.left = clientLeft;
+				}
+			}
 
-                    this.ball = domObject;
-                    this.ball.style.transition = 'all 0.5s cubic-bezier(0.6, 0.6, 0.85, 0.04) 0s';
-                }
+			class Ball extends Dimension {
+				constructor(domObject) {
+					super(domObject);
 
-                position(x, y, dimension){
-                    const getCurrentPosition = (axis, field, fieldStyle, fn) => {
-                        let currentPosition = fn(axis);
+					this.ball = domObject;
+					this.ball.style.transition =
+						"all 0.5s cubic-bezier(0.6, 0.6, 0.85, 0.04) 0s";
+				}
 
-                        if(currentPosition < 0)
-                            currentPosition = 0;
-                        
-                        if(currentPosition + this[field] >  dimension[field])
-                            currentPosition = dimension[field] - this[field];
+				position(x, y, dimension) {
+					const getCurrentPosition = (axis, field, fieldStyle, fn) => {
+						let currentPosition = fn(axis);
 
-                        return currentPosition;
-                    }
+						if (currentPosition < 0) currentPosition = 0;
 
-                    let currentPositionX = getCurrentPosition(x, 'width', 'left', this.centerByHeight.bind(this));
-                    let currentPositionY = getCurrentPosition(y, 'height', 'top', this.centerByWidth.bind(this));
-                    
-                    this.ball.style.left = `${currentPositionX}px`;
-                    this.ball.style.top = `${currentPositionY}px`;
-                }
+						if (currentPosition + this[field] > dimension[field])
+							currentPosition = dimension[field] - this[field];
 
-                centerByWidth(y){
-                    return y - this.height / 2;
-                }
+						return currentPosition;
+					};
 
-                centerByHeight(x){
-                    return x - this.width / 2;
-                }
-            }
+					let currentPositionX = getCurrentPosition(
+						x,
+						"width",
+						"left",
+						this.centerByHeight.bind(this)
+					);
+					let currentPositionY = getCurrentPosition(
+						y,
+						"height",
+						"top",
+						this.centerByWidth.bind(this)
+					);
+
+					this.ball.style.left = `${currentPositionX}px`;
+					this.ball.style.top = `${currentPositionY}px`;
+				}
+
+				centerByWidth(y) {
+					return y - this.height / 2;
+				}
+
+				centerByHeight(x) {
+					return x - this.width / 2;
+				}
+			}
 		</script>
 	</body>
 </html>
