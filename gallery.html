@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Галерея</title>
+		<meta charset="utf-8" />
+
+		<link rel="stylesheet" href="reset-css.css" />
+
+		<style>
+			#largeImg {
+				margin-bottom: 10px;
+				padding: 17px;
+				border: 1px solid #a7a7a7;
+			}
+			.thumbs div {
+				list-style: none;
+				border: 1px solid #a7a7a7;
+				outline: 0px solid #2c67cc;
+				line-height: 1px;
+				padding: 6px;
+				transition: all 0.1s ease-in;
+				display: inline-block;
+			}
+
+			.thumbs div:hover:not(.flexbox-container_element) {
+				border: 1px solid #2c67cc;
+				outline: 2px solid #2c67cc;
+			}
+
+			.flexbox-container {
+				display: flex;
+			}
+
+			.flexbox-container .flexbox-container_element {
+				margin: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="flexbox-container">
+			<img
+				class="flexbox-container_element"
+				id="largeImg"
+				src="https://en.js.cx/gallery/img1-lg.jpg"
+				alt="Large image"
+			/>
+		</div>
+
+		<div class="flexbox-container thumbs">
+			<span class="flexbox-container_element">
+				<div>
+					<a href="https://en.js.cx/gallery/img2-lg.jpg" title="Image 2"
+						><img src="https://en.js.cx/gallery/img2-thumb.jpg"
+					/></a>
+				</div>
+				<div>
+					<a href="https://en.js.cx/gallery/img3-lg.jpg" title="Image 3"
+						><img src="https://en.js.cx/gallery/img3-thumb.jpg"
+					/></a>
+				</div>
+				<div>
+					<a href="https://en.js.cx/gallery/img4-lg.jpg" title="Image 4"
+						><img src="https://en.js.cx/gallery/img4-thumb.jpg"
+					/></a>
+				</div>
+				<div>
+					<a href="https://en.js.cx/gallery/img5-lg.jpg" title="Image 5"
+						><img src="https://en.js.cx/gallery/img5-thumb.jpg"
+					/></a>
+				</div>
+				<div>
+					<a href="https://en.js.cx/gallery/img6-lg.jpg" title="Image 6"
+						><img src="https://en.js.cx/gallery/img6-thumb.jpg"
+					/></a>
+				</div>
+			</span>
+		</div>
+
+		<script>
+			class Gallery {
+				constructor(domObjectScreen, domObject) {
+					this._screen = domObjectScreen;
+					this._el = domObject;
+					this._el.addEventListener("click", this.onClick.bind(this));
+				}
+
+				onClick(event) {
+					let a = event.target.closest("a");
+
+					if (a) {
+						event.preventDefault();
+						this._screen.src = a.href;
+						debugger;
+					}
+				}
+			}
+
+			new Gallery(
+				document.querySelector("#largeImg"),
+				document.querySelector(".thumbs")
+			);
+		</script>
+	</body>
+</html>

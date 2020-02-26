@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Галерея</title>
+		<meta charset="utf-8" />
+
+		<link rel="stylesheet" href="reset-css.css" />
+
+		<style>
+			.grid {
+				display: grid;
+				margin: 0px auto;
+				text-align: center;
+				width: 630px;
+				grid-template-rows: 1fr;
+			}
+			.grid div:first-child {
+				padding: 37px;
+				grid-column: 1 / 6;
+			}
+			.grid div {
+				line-height: 1px;
+				margin: 2px;
+				border: 1px solid #a7a7a7;
+				padding: 8px;
+			}
+			.grid div:hover:not(:first-child) {
+				transition: all 0.1s ease-in;
+				border: 1px solid #2c67cc;
+				outline: 2px solid #2c67cc;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="grid">
+			<div>
+				<img
+					class="flexbox-container_element"
+					id="largeImg"
+					src="https://en.js.cx/gallery/img1-lg.jpg"
+					alt="Large image"
+				/>
+			</div>
+			<div>
+				<a href="https://en.js.cx/gallery/img2-lg.jpg" title="Image 2"
+					><img src="https://en.js.cx/gallery/img2-thumb.jpg"
+				/></a>
+			</div>
+			<div>
+				<a href="https://en.js.cx/gallery/img3-lg.jpg" title="Image 3"
+					><img src="https://en.js.cx/gallery/img3-thumb.jpg"
+				/></a>
+			</div>
+			<div>
+				<a href="https://en.js.cx/gallery/img4-lg.jpg" title="Image 4"
+					><img src="https://en.js.cx/gallery/img4-thumb.jpg"
+				/></a>
+			</div>
+			<div>
+				<a href="https://en.js.cx/gallery/img5-lg.jpg" title="Image 5"
+					><img src="https://en.js.cx/gallery/img5-thumb.jpg"
+				/></a>
+			</div>
+			<div>
+				<a href="https://en.js.cx/gallery/img6-lg.jpg" title="Image 6"
+					><img src="https://en.js.cx/gallery/img6-thumb.jpg"
+				/></a>
+			</div>
+			<div>
+				<a href="https://en.js.cx/gallery/img5-lg.jpg" title="Image 5"
+					><img src="https://en.js.cx/gallery/img5-thumb.jpg"
+				/></a>
+			</div>
+		</div>
+
+		<script>
+			class Gallery {
+				constructor(domObjectScreen, domObject) {
+					this._screen = domObjectScreen;
+					this._el = domObject;
+					this._el.addEventListener("click", this.onClick.bind(this));
+				}
+
+				onClick(event) {
+					let a = event.target.closest("a");
+
+					if (a) {
+						event.preventDefault();
+						this._screen.src = a.href;
+						this._screen.alt = a.title;
+					}
+				}
+			}
+
+			new Gallery(
+				document.querySelector("#largeImg"),
+				document.querySelector(".grid")
+			);
+		</script>
+	</body>
+</html>
