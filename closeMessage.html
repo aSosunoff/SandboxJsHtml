@@ -42,6 +42,7 @@
 	<body>
 		<div class="list">
 			<div class="pane">
+                <button class="remove-button">[x]</button>
 				<h3>Лошадь</h3>
 				<p>
 					Домашняя лошадь — животное семейства непарнокопытных, одомашненный и
@@ -50,6 +51,7 @@
 				</p>
 			</div>
 			<div class="pane">
+                <button class="remove-button">[x]</button>
 				<h3>Осёл</h3>
 				<p>
 					Домашний осёл (лат. Equus asinus asinus), или ишак, — одомашненный
@@ -59,6 +61,7 @@
 				</p>
 			</div>
 			<div class="pane">
+                <button class="remove-button">[x]</button>
 				<h3>Кошка</h3>
 				<p>
 					Кошка, или домашняя кошка (лат. Felis silvestris catus), — домашнее
@@ -71,11 +74,9 @@
         </div>
         
         <script>
-            let panes = document.querySelectorAll('.pane');
+            /* let panes = document.querySelectorAll('.pane');
 
             for (let pane of panes) {
-                pane.insertAdjacentHTML('afterbegin', '<button class="remove-button">[x]</button>')
-
                 pane.addEventListener('transitionend', function(e){
                     pane.remove();
                 },{
@@ -89,7 +90,35 @@
                 },{
                     once: true
                 });
-            }            
+            } */
+            
+            class List{
+                constructor(domObject){
+                    this._el = domObject;
+                    this._el.addEventListener('click', this.onClick);
+                    this._el.addEventListener('transitionend', this.onTransitionend);
+                }
+
+                onClick(event){
+                    let removeButton = event.target.closest('.remove-button');
+                    
+                    if(removeButton){
+                        let pane = removeButton.closest('.pane');
+                        
+                        if(pane)
+                            pane.style.opacity = 0;
+                    }
+                }
+
+                onTransitionend(event){
+                    let pane = event.target.closest('.pane');
+
+                    if(pane)               
+                        pane.remove();
+                }
+            }
+
+            new List(document.querySelector('.list'));
         </script>
 	</body>
 </html>
