@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<div id="menu">
+			<button data-action="save">Сохранить</button>
+			<button data-action="load">Загрузить</button>
+			<button data-action="search">Поиск</button>
+		</div>
+
+		<script>
+			class Menu{
+				constructor(domObject){
+					this._el = domObject;
+					this._el.addEventListener('click', this.onClick.bind(this));
+				}
+
+				save(){
+					alert('save');
+				}
+
+				load(){
+					alert('load');
+				}
+
+				search(){
+					alert('search');
+				}
+
+				onClick(event){
+					let action = event.target.dataset['action'];
+					
+					if(action)
+						this[action]();
+				}
+			}
+
+			new Menu(document.querySelector('#menu'));
+		</script>
+	</body>
+</html>
