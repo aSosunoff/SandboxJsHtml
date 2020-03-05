@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="reset-css.css" />
+
+		<title>Document</title>
+		<style>
+			.editing-view {
+				border: 1px solid #ddd;
+				padding: 2px;
+			}
+
+			.editing-view,
+			.editing-edit {
+				height: 150px;
+				width: 400px;
+				font-family: sans-serif;
+				font-size: 14px;
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="editing-view">
+			какой то текст
+		</div>
+
+		<div class="editing-view">
+			какой то текст
+		</div>
+
+		<script>
+			class Editing {
+				constructor() {
+					let views = document.querySelectorAll(".editing-view");
+					for(let view of views){
+						view.tabIndex = 0;
+					}
+
+					document.addEventListener('focusin', this.onFocus.bind(this));
+					
+					this.edit = document.createElement("textarea");
+					this.edit.className = "editing-edit";
+					this.edit.addEventListener("blur", this.onBlur.bind(this));
+				}
+
+				onFocus(event) {
+					let view = event.target.closest('.editing-view');
+
+					if(!view) {
+						return;
+					}
+
+					this.view = view;
+					this.edit.value = this.view.innerHTML.trim();
+					this.view.replaceWith(this.edit);
+					this.edit.focus();
+				}
+
+				onBlur(event) {
+					this.view.innerHTML = this.edit.value;
+					this.edit.replaceWith(this.view);
+					delete this.view;
+				}
+			}
+
+			let edit = new Editing();
+		</script>
+	</body>
+</html>
