@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="reset-css.css" />
+
+		<title>Document</title>
+		<style>
+			table tr td {
+				text-align: center;
+				padding: 5px;
+				white-space: nowrap;
+				border: 1px solid #909090;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				vertical-align: middle;
+				max-width: 120px;
+				max-height: 100px;
+				overflow: hidden;
+				width: 120px;
+				height: 100px;
+			}
+
+			table tr td.selected {
+				background-color: #bee2ff;
+				box-shadow: 5px 5px 8px 0px #c1c1c1;
+			}
+
+			.edit {
+				position: relative;
+			}
+			.editing-edit {
+				width: 100%;
+				box-sizing: border-box;
+				height: 100%;
+				padding: 0px;
+				position: absolute;
+				top: 0px;
+				resize: none;
+				left: 0px;
+				overflow: hidden;
+				border: none;
+				outline: none;
+				background-color: #e3f4ff;
+			}
+		</style>
+	</head>
+	<body>
+		<table class="table-click table-editing">
+			<tr>
+				<td>
+					<strong>Северо-Запад</strong> <br />Металл <br />Серебро
+					<br />Старейшины
+				</td>
+				<td><strong>Север</strong> <br />Вода <br />Синий <br />Перемены</td>
+				<td>
+					<strong>Северо-Восток</strong> <br />Земля <br />Жёлтый
+					<br />Направление
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Запад</strong> <br />Металл <br />Золото <br />Молодость
+				</td>
+				<td><strong>Центр</strong> <br />Всё <br />Пурпурный <br />Гармония</td>
+				<td><strong>Восток</strong> <br />Дерево <br />Синий <br />Будущее</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Юго-Запад</strong> <br />Земля <br />Коричневый
+					<br />Спокойствие
+				</td>
+				<td><strong>Юг</strong> <br />Огонь <br />Оранжевый <br />Слава</td>
+				<td>
+					<strong>Юго-Восток</strong> <br />Дерево <br />Зелёный <br />Роман
+				</td>
+			</tr>
+		</table>
+
+		<script>
+			class TableEditing {
+				constructor(domElement, option) {
+					let tableEditing = document.querySelector(".table-editing");
+					tableEditing.addEventListener("focusin", this.onFocus.bind(this));
+
+					let views = document.querySelectorAll(".table-editing tr td");
+					for (let view of views) {
+						view.tabIndex = 0;
+					}
+
+					this.edit = document.createElement("textarea");
+					this.edit.className = "editing-edit";
+					this.edit.addEventListener("blur", this.onBlur.bind(this));
+				}
+
+				onFocus(event) {
+					let view = event.target.closest(".table-editing tr td");
+
+					if (!view) {
+						return;
+					}
+
+					if (view.classList.contains("edit")) {
+						return;
+					}
+
+					this.view = view;
+					this.view.className = "edit";
+					this.edit.value = this.view.innerHTML.trim();
+					this.view.innerHTML = "";
+					this.view.append(this.edit);
+
+					this.edit.focus();
+				}
+
+				onBlur(event) {
+					this.view.innerHTML = this.edit.value;
+					this.view.classList.remove("edit");
+					delete this.view;
+				}
+			}
+
+			let tableEditing = new TableEditing();
+		</script>
+	</body>
+</html>

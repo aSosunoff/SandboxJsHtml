@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="reset-css.css" />
+
+		<title>Document</title>
+		<style>
+			table tr td {
+				text-align: center;
+				padding: 5px;
+				white-space: nowrap;
+				border: 1px solid #909090;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				vertical-align: middle;
+				max-width: 120px;
+				max-height: 100px;
+				overflow: hidden;
+				width: 120px;
+				height: 100px;
+			}
+
+			.table-selected .selected {
+				background-color: #bee2ff;
+				box-shadow: 5px 5px 8px 0px #c1c1c1;
+			}
+
+			.table-editing td {
+				outline: none;
+			}
+			.table-editing .edit {
+				position: relative;
+			}
+			.table-editing .editing-edit {
+				width: 100%;
+				box-sizing: border-box;
+				height: 100%;
+				padding: 0px;
+				position: absolute;
+				top: 0px;
+				resize: none;
+				left: 0px;
+				overflow: hidden;
+				border: none;
+				outline: none;
+				background-color: #e3f4ff;
+			}
+		</style>
+	</head>
+	<body>
+		<table class="table-selected table-editing">
+			<tr>
+				<td>
+					<strong>Северо-Запад</strong> <br />Металл <br />Серебро
+					<br />Старейшины
+				</td>
+				<td><strong>Север</strong> <br />Вода <br />Синий <br />Перемены</td>
+				<td>
+					<strong>Северо-Восток</strong> <br />Земля <br />Жёлтый
+					<br />Направление
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Запад</strong> <br />Металл <br />Золото <br />Молодость
+				</td>
+				<td><strong>Центр</strong> <br />Всё <br />Пурпурный <br />Гармония</td>
+				<td><strong>Восток</strong> <br />Дерево <br />Синий <br />Будущее</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Юго-Запад</strong> <br />Земля <br />Коричневый
+					<br />Спокойствие
+				</td>
+				<td><strong>Юг</strong> <br />Огонь <br />Оранжевый <br />Слава</td>
+				<td>
+					<strong>Юго-Восток</strong> <br />Дерево <br />Зелёный <br />Роман
+				</td>
+			</tr>
+		</table>
+
+		<script>
+			class TableSelected {
+				constructor() {
+					const table = document.querySelector(".table-selected");
+					table.addEventListener("click", this._onClick.bind(this));
+
+					this.selectedArray = [];
+				}
+
+				_onClick(event) {
+					let td = event.target.closest("td");
+
+					if (!td) return;
+
+					if (!td.classList.contains("selected")) {
+						td.classList.add("selected");
+						this.selectedArray.push(td);
+					}
+
+					if (event.ctrlKey) {
+						return;
+					}
+
+					this.selectedArray.filter(_td => _td != td).forEach(_td => _td.classList.toggle("selected"));
+
+					this.selectedArray = this.selectedArray.filter(_td => _td == td);
+				}
+			}
+
+			class TableEditing {
+				constructor(domElement, option) {
+					let tableEditing = document.querySelector(".table-editing");
+					tableEditing.addEventListener("dblclick", this._onDbClick.bind(this));
+
+					let views = tableEditing.querySelectorAll("td");
+					for (let view of views) {
+						view.tabIndex = 0;
+					}
+
+					this.edit = document.createElement("textarea");
+					this.edit.className = "editing-edit";
+					this.edit.addEventListener("blur", this._onBlur.bind(this));
+				}
+
+				_onDbClick(event) {
+					let view = event.target.closest(".table-editing tr td");
+
+					if (!view) {
+						return;
+					}
+
+					this._onFocus(event);
+				}
+
+				_onFocus(event) {
+					let view = event.target.closest(".table-editing tr td");
+
+					if (!view) {
+						return;
+					}
+
+					if (view.classList.contains("edit")) {
+						return;
+					}
+
+					this.view = view;
+					this.view.classList.add("edit");
+					this.edit.value = this.view.innerHTML.trim();
+					this.view.innerHTML = "";
+					this.view.append(this.edit);
+
+					this.edit.focus();
+				}
+
+				_onBlur(event) {
+					this.view.innerHTML = this.edit.value;
+					this.view.classList.remove("edit");
+					delete this.view;
+				}
+			}
+
+			new TableSelected();
+			new TableEditing();
+		</script>
+	</body>
+</html>
