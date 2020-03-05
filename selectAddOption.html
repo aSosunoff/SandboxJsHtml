@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="reset-css.css"></script>
+		<title>Document</title>
+	</head>
+	<body>
+		<select id="genres">
+			<option value="rock">Рок</option>
+			<option value="blues">Блюз</option>
+		</select>
+
+		<script>
+			class Select{
+				constructor(domElement){
+					this.el = domElement;
+
+				}
+
+				addSelectedItem(text, value){
+					this.clearSelected();
+					let option = new Option(text, value, true, true);
+					this.el.append(option);
+				}
+
+				clearSelected(){
+					this.el.options.selectedIndex = -1;
+
+					for(let option of this.el.options){
+						option.selected = false;
+					}
+				}
+			}
+
+			let selectGenres = new Select(document.querySelector('#genres'));
+			selectGenres.addSelectedItem('Классика', 'classic');
+		</script>
+	</body>
+</html>
