@@ -81,17 +81,49 @@
 			</tr>
 		</table>
 
+		<br>
+
+		<table class="table-selected table-editing">
+			<tr>
+				<td>
+					<strong>Северо-Запад</strong> <br />Металл <br />Серебро
+					<br />Старейшины
+				</td>
+				<td><strong>Север</strong> <br />Вода <br />Синий <br />Перемены</td>
+				<td>
+					<strong>Северо-Восток</strong> <br />Земля <br />Жёлтый
+					<br />Направление
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Запад</strong> <br />Металл <br />Золото <br />Молодость
+				</td>
+				<td><strong>Центр</strong> <br />Всё <br />Пурпурный <br />Гармония</td>
+				<td><strong>Восток</strong> <br />Дерево <br />Синий <br />Будущее</td>
+			</tr>
+			<tr>
+				<td>
+					<strong>Юго-Запад</strong> <br />Земля <br />Коричневый
+					<br />Спокойствие
+				</td>
+				<td><strong>Юг</strong> <br />Огонь <br />Оранжевый <br />Слава</td>
+				<td>
+					<strong>Юго-Восток</strong> <br />Дерево <br />Зелёный <br />Роман
+				</td>
+			</tr>
+		</table>
+
 		<script>
 			class TableSelected {
 				constructor() {
-					const table = document.querySelector(".table-selected");
-					table.addEventListener("click", this._onClick.bind(this));
+					document.addEventListener("click", this._onClick.bind(this));
 
 					this.selectedArray = [];
 				}
 
 				_onClick(event) {
-					let td = event.target.closest("td");
+					let td = event.target.closest(".table-selected td");
 
 					if (!td) return;
 
@@ -112,10 +144,9 @@
 
 			class TableEditing {
 				constructor(domElement, option) {
-					let tableEditing = document.querySelector(".table-editing");
-					tableEditing.addEventListener("dblclick", this._onDbClick.bind(this));
+					document.addEventListener("dblclick", this._onDbClick.bind(this));
 
-					let views = tableEditing.querySelectorAll("td");
+					let views = document.querySelectorAll(".table-editing td");
 					for (let view of views) {
 						view.tabIndex = 0;
 					}
