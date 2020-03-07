@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="reset-css.css" />
+
+		<title>Document</title>
+		<style>
+			.element-move {
+				width: 150px;
+				height: 100px;
+				border: 1px solid #ddd;
+				margin: 5px;
+			}
+
+			.element-move_selected {
+				outline: 1px solid #ddd;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="element-move"></div>
+		<div class="element-move"></div>
+
+		<script>
+			class ElementMove {
+				constructor() {
+					document.addEventListener("focusin", this._onFocusin.bind(this));
+					document.addEventListener("focusout", this._onFocusout.bind(this));
+					document.addEventListener("keydown", this._onKeydown.bind(this));
+
+					let elementsMove = document.querySelectorAll(".element-move");
+					for (let elementMove of elementsMove) {
+						elementMove.tabIndex = 0;
+					}
+				}
+
+				_onFocusin(event) {
+					let elementMove = event.target.closest(".element-move");
+
+					if (!elementMove) return;
+
+					elementMove.classList.add("element-move_selected");
+
+					this.elementMove = elementMove;
+
+					let clientRect = this.elementMove.getBoundingClientRect();
+					let comStyle = getComputedStyle(this.elementMove);
+					let margineTop = parseInt(comStyle.marginTop);
+					let marginLeft = parseInt(comStyle.marginLeft);
+
+					this.elementMove.style.top = `${clientRect.top - margineTop}px`;
+					this.elementMove.style.left = `${clientRect.left - marginLeft}px`;
+					this.elementMove.style.position = "fixed";
+				}
+
+				_onFocusout(event){
+					let elementMove = event.target.closest(".element-move");
+					
+					if (!elementMove) return;
+
+					elementMove.classList.remove("element-move_selected");
+
+					delete this.elementMove;
+				}
+
+				_onKeydown(event) {
+					if (!this.elementMove) {
+						return;
+					}
+
+					let clientRect = this.elementMove.getBoundingClientRect();
+					let comStyle = getComputedStyle(this.elementMove);
+					let margineTop = parseInt(comStyle.marginTop);
+					let marginLeft = parseInt(comStyle.marginLeft);
+
+					switch (event.code) {
+						case "ArrowUp":
+							this.elementMove.style.top = `${clientRect.top - margineTop - 10}px`;
+							break;
+						case "ArrowDown":
+							this.elementMove.style.top = `${clientRect.top - margineTop + 10}px`;
+							break;
+						case "ArrowLeft":
+							this.elementMove.style.left = `${clientRect.left - marginLeft - 10}px`;
+							break;
+						case "ArrowRight":
+							this.elementMove.style.left = `${clientRect.left - marginLeft + 10}px`;
+							break;
+					}
+				}
+			}
+
+			new ElementMove();
+		</script>
+	</body>
+</html>
