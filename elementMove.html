@@ -31,9 +31,49 @@
 					document.addEventListener("keydown", this._onKeydown.bind(this));
 
 					let elementsMove = document.querySelectorAll(".element-move");
+
 					for (let elementMove of elementsMove) {
 						elementMove.tabIndex = 0;
 					}
+
+					this.currentElementMove = {
+						el: null,
+						dimension: function(){
+							let defaultObj = {
+								top: 0,
+								left: 0,
+								margineTop: 0,
+								marginLeft: 0
+							}
+
+							if(!this.el) {
+								return defaultObj;
+							}
+
+							let {top, left} = this.el.getBoundingClientRect();
+							let {marginTop, marginLeft} = getComputedStyle(this.el);
+
+							return Object.assign(defaultObj, {
+								top,
+								left
+							}, {
+								margineTop: parseInt(marginTop),
+								marginLeft: parseInt(marginLeft)
+							});
+						}
+					}
+				}
+
+				_setCurrentElementMode(el){
+					el.classList.add("element-move_selected");
+
+					this.currentElementMove.el = el;
+				}
+
+				_removeCurrentElementMove(){
+					this.currentElementMove.el.classList.remove("element-move_selected");
+
+					this.currentElementMove.el = null;
 				}
 
 				_onFocusin(event) {
@@ -41,18 +81,13 @@
 
 					if (!elementMove) return;
 
-					elementMove.classList.add("element-move_selected");
+					this._setCurrentElementMode(elementMove);
 
-					this.elementMove = elementMove;
+					let dimension = this.currentElementMove.dimension();
 
-					let clientRect = this.elementMove.getBoundingClientRect();
-					let comStyle = getComputedStyle(this.elementMove);
-					let margineTop = parseInt(comStyle.marginTop);
-					let marginLeft = parseInt(comStyle.marginLeft);
-
-					this.elementMove.style.top = `${clientRect.top - margineTop}px`;
-					this.elementMove.style.left = `${clientRect.left - marginLeft}px`;
-					this.elementMove.style.position = "fixed";
+					this.currentElementMove.el.style.top = `${dimension.top - dimension.margineTop}px`;
+					this.currentElementMove.el.style.left = `${dimension.left - dimension.marginLeft}px`;
+					this.currentElementMove.el.style.position = "fixed";
 				}
 
 				_onFocusout(event){
@@ -60,33 +95,28 @@
 					
 					if (!elementMove) return;
 
-					elementMove.classList.remove("element-move_selected");
-
-					delete this.elementMove;
+					this._removeCurrentElementMove();
 				}
 
 				_onKeydown(event) {
-					if (!this.elementMove) {
+					if (!this.currentElementMove.el) {
 						return;
 					}
 
-					let clientRect = this.elementMove.getBoundingClientRect();
-					let comStyle = getComputedStyle(this.elementMove);
-					let margineTop = parseInt(comStyle.marginTop);
-					let marginLeft = parseInt(comStyle.marginLeft);
+					let dimension = this.currentElementMove.dimension();
 
 					switch (event.code) {
 						case "ArrowUp":
-							this.elementMove.style.top = `${clientRect.top - margineTop - 10}px`;
+							this.currentElementMove.el.style.top = `${dimension.top - dimension.margineTop - 10}px`;
 							break;
 						case "ArrowDown":
-							this.elementMove.style.top = `${clientRect.top - margineTop + 10}px`;
+							this.currentElementMove.el.style.top = `${dimension.top - dimension.margineTop + 10}px`;
 							break;
 						case "ArrowLeft":
-							this.elementMove.style.left = `${clientRect.left - marginLeft - 10}px`;
+							this.currentElementMove.el.style.left = `${dimension.left - dimension.marginLeft - 10}px`;
 							break;
 						case "ArrowRight":
-							this.elementMove.style.left = `${clientRect.left - marginLeft + 10}px`;
+							this.currentElementMove.el.style.left = `${dimension.left - dimension.marginLeft + 10}px`;
 							break;
 					}
 				}
