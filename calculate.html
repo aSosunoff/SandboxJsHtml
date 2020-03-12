@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="reset-css.css" />
+
+		<title>Document</title>
+		<style>
+			.calculate {
+				width: 500px;
+				margin: 0 auto;
+				border: 1px solid #ddd;
+				display: grid;
+
+				grid-template-columns: 1fr 1fr;
+				gap: 10px;
+
+				transition: 0.2s all ease;
+			}
+			.calculate input,
+			.calculate select {
+				width: 100%;
+			}
+			.calculate > div {
+				align-self: center;
+				padding: 10px;
+				text-align: left;
+
+				transition: 0.2s all ease;
+			}
+			.calculate > div:nth-child(2n) {
+				text-align: right;
+			}
+			.calculate__title {
+				grid-column: 1 / 3;
+				text-align: center !important;
+			}
+
+			.calculator__before-color div {
+				background-color: red;
+			}
+
+			.calculator__after-color div {
+				background-color: green;
+			}
+
+			.calculator__before-color div,
+			.calculator__after-color div {
+				width: 50px;
+				height: 31px;
+				display: inline-block;
+			}
+
+			.calculator__before-color,
+			.calculator__after-color{
+				align-self: end !important;
+			}
+
+			@media screen and (max-width: 600px) {
+				.calculate {
+					grid-template-columns: 1fr;
+				}
+				.calculate__title {
+					grid-column: auto;
+				}
+				.calculate > div {
+					text-align: center !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="app"></div>
+
+		<!-- <div class="">
+				<div class="calculate__title">Депозитный калькулятор</div>
+			</div>
+
+			<div class="calculate__first">
+				<div class="left"></div>
+				<div class="right"></div>
+			</div>
+
+			<div class="calculate__term">
+				<div class="left"></div>
+				<div class="right"></div>
+			</div>
+
+			<div class="calculate__persent">
+				<div class="left"></div>
+				<div class="right"></div>
+			</div>
+
+			<div class="calculate__stats">
+				<div class="left"></div>
+				<div class="right"></div>
+			</div>
+
+			<div class="calculate__color-column">
+				<div class="left"></div>
+				<div class="right"></div>
+			</div> -->
+
+		<script>
+			class Calc {
+				constructor(el) {
+					const years = [
+						{ val: 3, text: "3 (минимум)" },
+						{ val: 6, text: "6 (полгода)" },
+						{ val: 12, text: "12 (год)", selected: true },
+						{ val: 18, text: "18 (1.5 года)" },
+						{ val: 24, text: "24 (2 года)" },
+						{ val: 30, text: "30 (2.5 года)" },
+						{ val: 36, text: "36 (3 года)" },
+						{ val: 60, text: "60 (5 лет)" }
+					];
+
+					el.innerHTML = `
+					<div class="calculate">
+						<div class="calculate__title">Депозитный калькулятор</div>
+						<div>Первоначальный депозит</div>
+						<div><input type="text" class="calculate__initial" value="10000"/></div>
+						<div>Срок вклада?</div>
+						<div>
+							<select class="calculate__years"></select>
+						</div>
+						<div>Годовая процентная ставка?</div>
+						<div><input type="text" value="5" class="calculate__interest" value="5"/></div>
+						<div>Было:</div>
+						<div>Стало:</div>
+						<div class="calculator__before"></div>
+						<div class="calculator__after"></div>
+						<div class="calculator__before-color">
+							<div></div>
+						</div>
+						<div class="calculator__after-color">
+							<div></div>
+						</div>
+					</div>
+					`;
+
+					this.initial = el.querySelector(".calculate__initial");
+					this.years = el.querySelector(".calculate__years");
+					this.interest = el.querySelector(".calculate__interest");
+					this.before = el.querySelector(".calculator__before");
+					this.after = el.querySelector(".calculator__after");
+
+					this.before_color = el.querySelector(".calculator__before-color div");
+					this.after_color = el.querySelector(".calculator__after-color div");
+
+					this.years.append(
+						...years.map(
+							m =>
+								new Option(
+									m.text,
+									m.val,
+									"selected" in m && m.selected,
+									"selected" in m && m.selected
+								)
+						)
+					);
+
+					document.addEventListener("input", this.onInput.bind(this));
+					document.dispatchEvent(new Event("input", { bubbles: true }));
+				}
+
+				onInput(event) {
+					let initial = +this.initial.value;
+					if (Number.isNaN(initial)) return;
+
+					let interest = +this.interest.value;
+					if (Number.isNaN(interest)) return;
+
+					let years = +this.years.value;
+					if (Number.isNaN(years)) return;
+
+					let result = Math.round(
+						initial * (1 + ((interest / 100) * years) / 12)
+					);
+
+					this.before.textContent = initial;
+					this.after.textContent = result;
+
+					this.before_color.style.height = `100px`;
+					this.after_color.style.height = `${result / initial * 100}px`;
+				}
+			}
+
+			let edit = new Calc(document.querySelector("body"));
+		</script>
+	</body>
+</html>
